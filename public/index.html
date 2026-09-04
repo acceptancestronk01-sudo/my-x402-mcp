@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Data MCP - x402 Payment Protected API</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .price {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .feature {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .feature:last-child { border-bottom: none; }
+        .feature strong { color: #667eea; }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 10px 10px 10px 0;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #764ba2;
+        }
+        .btn-secondary {
+            background: #48bb78;
+        }
+        .btn-secondary:hover {
+            background: #38a169;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🔐 Crypto Data MCP</h1>
+            <p class="subtitle">Payment-Protected DexScreener API via x402 Protocol</p>
+
+            <div>
+                <span class="badge">MCP Server</span>
+                <span class="badge">x402 Payments</span>
+                <span class="badge">Base Mainnet</span>
+                <span class="badge">DexScreener</span>
+            </div>
+
+            <div class="price">$0.002 USDC per call</div>
+
+            <div>
+                <a href="/mcp/tools" class="btn">View MCP Metadata</a>
+                <a href="https://github.com/acceptancestronk01-sudo/my-x402-mcp" class="btn btn-secondary">GitHub</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>✨ Features</h2>
+            <div class="feature">
+                <strong>💳 Micropayments</strong> - Pay-per-use model with USDC on Base Mainnet
+            </div>
+            <div class="feature">
+                <strong>🔒 x402 Protected</strong> - Industry-standard payment protocol
+            </div>
+            <div class="feature">
+                <strong>📊 Real-time Data</strong> - Live cryptocurrency data from DexScreener
+            </div>
+            <div class="feature">
+                <strong>🤖 MCP Compatible</strong> - Works with Claude and other AI agents
+            </div>
+            <div class="feature">
+                <strong>⚡ Fast & Reliable</strong> - Deployed on Vercel Edge Network
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🚀 Quick Start</h2>
+            <p><strong>Endpoint:</strong> <code>GET /api/cryptodata?token={TOKEN_ADDRESS}</code></p>
+
+            <h3 style="margin-top: 20px;">Example Request:</h3>
+            <div class="code-block">
+curl https://my-x402-mcp.vercel.app/api/cryptodata?token=0x4200000000000000000000000000000000000006
+            </div>
+
+            <h3 style="margin-top: 20px;">Response (402 Payment Required):</h3>
+            <div class="code-block">
+{
+  "error": "Payment Required",
+  "payment": {
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "price": "$0.002",
+    "currency": "USDC",
+    "payTo": "0xf081ee84c0d85278a6242bc265f0b312021ebeb1"
+  }
+}
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📡 MCP Integration</h2>
+            <p>Add this MCP server to your AI agent:</p>
+            <div class="code-block">
+{
+  "mcpServers": {
+    "crypto-data": {
+      "url": "https://my-x402-mcp.vercel.app",
+      "metadata": "https://my-x402-mcp.vercel.app/mcp/tools"
+    }
+  }
+}
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💰 Payment Details</h2>
+            <div class="feature">
+                <strong>Network:</strong> Base Mainnet (eip155:8453)
+            </div>
+            <div class="feature">
+                <strong>Currency:</strong> USDC
+            </div>
+            <div class="feature">
+                <strong>Price:</strong> $0.002 per API call
+            </div>
+            <div class="feature">
+                <strong>Protocol:</strong> x402 "exact" scheme
+            </div>
+            <div class="feature">
+                <strong>Payment Address:</strong> <code>0xf081ee84c0d85278a6242bc265f0b312021ebeb1</code>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📚 Documentation</h2>
+            <p>For more information:</p>
+            <ul style="padding-left: 20px; margin-top: 10px;">
+                <li><a href="https://github.com/acceptancestronk01-sudo/my-x402-mcp">GitHub Repository</a></li>
+                <li><a href="https://x402.org">x402 Protocol</a></li>
+                <li><a href="https://dexscreener.com">DexScreener API</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
