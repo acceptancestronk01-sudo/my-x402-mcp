@@ -8,7 +8,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.static('public'));
 
 // Payment configuration
 const PAYMENT_CONFIG = {
@@ -369,6 +368,48 @@ app.get('/api/cryptodata', async (req, res) => {
   const paymentHeader = req.headers['x-payment-signature'];
 
   if (!paymentHeader) {
+    // Bazaar discovery metadata (encoded as base64 JSON in response header)
+    const bazaarMetadata = {
+      method: 'GET',
+      description: 'Fetch real-time cryptocurrency token data from DexScreener. Returns token pairs, prices, volume, and market data for any token address.',
+      queryParamsSchema: {
+        type: 'object',
+        properties: {
+          token: {
+            type: 'string',
+            description: 'Token contract address (e.g., 0x4200000000000000000000000000000000000006)',
+            pattern: '^0x[a-fA-F0-9]{40}$'
+          }
+        },
+        required: ['token']
+      },
+      outputSchema: {
+        type: 'object',
+        properties: {
+          token: { type: 'string' },
+          timestamp: { type: 'string', format: 'date-time' },
+          pairs: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                chainId: { type: 'string' },
+                dexId: { type: 'string' },
+                pairAddress: { type: 'string' },
+                priceUsd: { type: 'string' },
+                volume: { type: 'object' },
+                liquidity: { type: 'object' }
+              }
+            }
+          }
+        }
+      },
+      tags: ['crypto', 'defi', 'dexscreener', 'tokens', 'prices', 'mcp']
+    };
+
+    // Add Bazaar discovery header
+    res.setHeader('X-Bazaar-Metadata', Buffer.from(JSON.stringify(bazaarMetadata)).toString('base64'));
+
     // Return 402 Payment Required with x402 payment instructions
     return res.status(402).json({
       error: 'Payment Required',
@@ -430,6 +471,39 @@ app.get('/api/cryptodata', async (req, res) => {
   }
 });
 
+// x402 Bazaar discovery endpoint
+app.get('/.well-known/x402', (req, res) => {
+  res.json({
+    version: '1.0',
+    endpoints: [
+      {
+        path: '/api/cryptodata',
+        method: 'GET',
+        description: 'Fetch real-time cryptocurrency token data from DexScreener',
+        payment: {
+          scheme: 'exact',
+          network: PAYMENT_CONFIG.chainId,
+          price: PAYMENT_CONFIG.price,
+          currency: PAYMENT_CONFIG.currency,
+          payTo: PAYMENT_CONFIG.payTo
+        },
+        queryParams: {
+          type: 'object',
+          properties: {
+            token: {
+              type: 'string',
+              description: 'Token contract address',
+              pattern: '^0x[a-fA-F0-9]{40}$'
+            }
+          },
+          required: ['token']
+        },
+        tags: ['crypto', 'defi', 'dexscreener', 'tokens', 'prices', 'mcp']
+      }
+    ]
+  });
+});
+
 // MCP tool metadata endpoint
 app.get('/mcp/tools', (req, res) => {
   res.json({
@@ -452,16 +526,24 @@ app.get('/mcp/tools', (req, res) => {
           currency: PAYMENT_CONFIG.currency,
           network: `Base Mainnet (${PAYMENT_CONFIG.chainId})`,
           payTo: PAYMENT_CONFIG.payTo
+        },
+        bazaar: {
+          discoverable: true,
+          discoveryUrl: '/.well-known/x402'
         }
       }
     ]
   });
 });
 
+// Serve static files (after API routes to avoid conflicts)
+app.use(express.static('public'));
+
 app.listen(PORT, () => {
   console.log(`🚀 MCP server running on port ${PORT}`);
   console.log(`💰 Payment-protected endpoint: /api/cryptodata`);
   console.log(`📊 Price: $${PAYMENT_CONFIG.price} ${PAYMENT_CONFIG.currency} per call on Base Mainnet`);
+  console.log(`🏪 Bazaar discovery: /.well-known/x402`);
   console.log(`⚠️  Mock payment verification enabled (for testing)`);
 });
 
