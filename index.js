@@ -430,6 +430,29 @@ app.get('/api/cryptodata', async (req, res) => {
   // In production, this would verify the actual payment signature
   console.log(`Payment received: ${paymentHeader}`);
 
+  // Verify payment on-chain
+  try {
+    const isValidPayment = await verifyPayment({
+      proof: paymentHeader,
+      expectedAmount: PAYMENT_CONFIG.price,
+      expectedCurrency: PAYMENT_CONFIG.currency,
+      expectedRecipient: PAYMENT_CONFIG.payTo,
+      chainId: PAYMENT_CONFIG.chainId
+    });
+
+    if (!isValidPayment) {
+      return res.status(402).json({
+        error: 'Payment verification failed',
+        message: 'Invalid or insufficient payment proof'
+      });
+    }
+  } catch (error) {
+    return res.status(402).json({
+      error: 'Payment verification error',
+      message: error.message || 'Could not verify payment'
+    });
+  }
+
   try {
     const { token } = req.query;
 
