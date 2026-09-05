@@ -422,7 +422,7 @@ app.get('/api/cryptodata', async (req, res) => {
         payTo: PAYMENT_CONFIG.payTo,
         description: 'Fetch cryptocurrency token data from DexScreener'
       },
-      instructions: 'Include X-Payment-Signature header with valid payment proof'
+      instructions: 'Include payment signature in PAYMENT-SIGNATURE header (x402 v2) or X-PAYMENT header (x402 v1)'
     });
   }
 
