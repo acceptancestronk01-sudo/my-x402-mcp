@@ -1,0 +1,34 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.acceptancestronk01-sudo/crypto-data",
+  "description": "x402 payment-protected crypto data API. Real-time token data from DexScreener. $0.002 USDC per call.",
+  "homepage": "https://my-x402-mcp.vercel.app",
+  "repository": {
+    "url": "https://github.com/acceptancestronk01-sudo/my-x402-mcp",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "url",
+      "identifier": "https://my-x402-mcp.vercel.app",
+      "version": "1.0.0",
+      "transport": {
+        "type": "sse",
+        "url": "https://my-x402-mcp.vercel.app"
+      }
+    }
+  ],
+  "tags": ["crypto", "defi", "dexscreener", "web3", "payments", "x402"],
+  "vendor": {
+    "name": "acceptancestronk01-sudo",
+    "url": "https://github.com/acceptancestronk01-sudo"
+  },
+  "payment": {
+    "required": true,
+    "protocol": "x402",
+    "price": "$0.002",
+    "currency": "USDC",
+    "network": "Base Mainnet (eip155:8453)"
+  }
+}

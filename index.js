@@ -1,4 +1,5 @@
 import express from 'express';
+import { createPaymentMiddleware } from './payment-verification.js';
 import axios from 'axios';
 import dotenv from 'dotenv';
 
@@ -16,6 +17,9 @@ const PAYMENT_CONFIG = {
   chainId: 'eip155:8453',
   payTo: '0xf081ee84c0d85278a6242bc265f0b312021ebeb1'
 };
+
+// X402 Payment Verification Middleware
+const verifyPayment = createPaymentMiddleware(PAYMENT_CONFIG);
 
 // Root landing page
 app.get('/', (req, res) => {
@@ -362,73 +366,9 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'my-x402-mcp' });
 });
 
-// Protected crypto data endpoint with mock payment verification
-app.get('/api/cryptodata', async (req, res) => {
-  // Check for payment header (x402 format)
-  const paymentHeader = req.headers['x-payment-signature'];
-
-  if (!paymentHeader) {
-    // Bazaar discovery metadata (encoded as base64 JSON in response header)
-    const bazaarMetadata = {
-      method: 'GET',
-      description: 'Fetch real-time cryptocurrency token data from DexScreener. Returns token pairs, prices, volume, and market data for any token address.',
-      queryParamsSchema: {
-        type: 'object',
-        properties: {
-          token: {
-            type: 'string',
-            description: 'Token contract address (e.g., 0x4200000000000000000000000000000000000006)',
-            pattern: '^0x[a-fA-F0-9]{40}$'
-          }
-        },
-        required: ['token']
-      },
-      outputSchema: {
-        type: 'object',
-        properties: {
-          token: { type: 'string' },
-          timestamp: { type: 'string', format: 'date-time' },
-          pairs: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                chainId: { type: 'string' },
-                dexId: { type: 'string' },
-                pairAddress: { type: 'string' },
-                priceUsd: { type: 'string' },
-                volume: { type: 'object' },
-                liquidity: { type: 'object' }
-              }
-            }
-          }
-        }
-      },
-      tags: ['crypto', 'defi', 'dexscreener', 'tokens', 'prices', 'mcp']
-    };
-
-    // Add Bazaar discovery header
-    res.setHeader('X-Bazaar-Metadata', Buffer.from(JSON.stringify(bazaarMetadata)).toString('base64'));
-
-    // Return 402 Payment Required with x402 payment instructions
-    return res.status(402).json({
-      error: 'Payment Required',
-      message: 'This endpoint requires payment to access',
-      payment: {
-        scheme: 'exact',
-        network: PAYMENT_CONFIG.chainId,
-        price: `$${PAYMENT_CONFIG.price}`,
-        currency: PAYMENT_CONFIG.currency,
-        payTo: PAYMENT_CONFIG.payTo,
-        description: 'Fetch cryptocurrency token data from DexScreener'
-      },
-      instructions: 'Include payment signature in PAYMENT-SIGNATURE header (x402 v2) or X-PAYMENT header (x402 v1)'
-    });
-  }
-
-  // Mock payment verification (for testing)
-  // In production, this would verify the actual payment signature
-  console.log(`Payment received: ${paymentHeader}`);
+// Protected crypto data endpoint
+app.get('/api/cryptodata', verifyPayment, async (req, res) => {
+  // Payment verified by middleware - safe to proceed
 
   try {
     const { token } = req.query;

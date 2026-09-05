@@ -1,5 +1,7 @@
 # my-x402-mcp
 
+<!-- mcp-name: io.github.acceptancestronk01-sudo/crypto-data -->
+
 MCP tool with x402 payment middleware for fetching cryptocurrency data from DexScreener.
 
 ## Features

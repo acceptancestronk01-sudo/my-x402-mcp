@@ -1,0 +1,23 @@
+{
+  "title": "x402 MCP Server Configuration",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "port": {
+      "title": "Port",
+      "type": "integer",
+      "description": "Port to run the server on",
+      "default": 3000,
+      "example": 3000
+    },
+    "nodeEnv": {
+      "title": "Node Environment",
+      "type": "string",
+      "description": "Node environment (production/development)",
+      "default": "production",
+      "enum": ["production", "development"],
+      "enumTitles": ["Production", "Development"]
+    }
+  },
+  "required": []
+}

@@ -1,0 +1,39 @@
+{
+  "serverInfo": {
+    "name": "crypto-data",
+    "version": "1.0.0",
+    "description": "Payment-protected cryptocurrency data API via x402. Fetch real-time token data from DexScreener including prices, volume, liquidity, and trading pairs."
+  },
+  "tools": [
+    {
+      "name": "cryptodata",
+      "description": "Fetch real-time cryptocurrency token data from DexScreener",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Token contract address (e.g., 0x4200000000000000000000000000000000000006)",
+            "pattern": "^0x[a-fA-F0-9]{40}$"
+          }
+        },
+        "required": ["token"]
+      }
+    }
+  ],
+  "authentication": {
+    "type": "custom",
+    "description": "x402 payment protocol - $0.002 USDC per call on Base Mainnet"
+  },
+  "payment": {
+    "protocol": "x402",
+    "price": "$0.002",
+    "currency": "USDC",
+    "network": "Base Mainnet (eip155:8453)",
+    "paymentAddress": "0xf081ee84c0d85278a6242bc265f0b312021ebeb1"
+  },
+  "links": {
+    "repository": "https://github.com/acceptancestronk01-sudo/my-x402-mcp",
+    "homepage": "https://my-x402-mcp.vercel.app"
+  }
+}
